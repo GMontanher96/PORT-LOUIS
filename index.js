@@ -44,9 +44,10 @@ require("dotenv").config();
 
     console.log("Redirecionamento bem-sucedido para:", currentUrl);
 
-    // Aguardar a visibilidade do menu de perfil
-    //const profileMenuSelector = 'summary[aria-label="Open user navigation menu"]';
-    //await page.waitForSelector(profileMenuSelector);
+    //Aguardar a visibilidade do menu de perfil
+    //await page.click(".AppHeader-user"), {delay: 100 };
+    // await page.waitForSelector('a[href$="/GMontanher96"', { delay: 100 });
+    // await page.waitForNavigation();
 
     // Acessando a aba "Repositories".
     await page.goto("https://github.com/GMontanher96?tab=repositories");
@@ -72,47 +73,44 @@ require("dotenv").config();
     await page.goto(randomRepoUrl, { waitUntil: "networkidle2" });
 
     // Acessando a aba de Pull Requests
-   // await page.waitForSelector('a[href$="/pulls"', { delay: 100 });
-    //await page.click("#pull-requests-tab");
-
-    // Verificar se a página de Pull Requests foi carregada
-    //await page.waitForSelector(
-     // "#pull-requests-tab",
-     // { visible: true },
-     // { delay: 100 }
-    //);
-
-    //console.log("Página de Pull Requests acessada.");
-
-    // Criando um novo repositório
-    // Navegar para a página de criação de novo repositório
-    await page.goto("https://github.com/new", { waitUntil: "networkidle2" });
-
-    // Gerar um nome único para o repositório
-    const repoName = `test-repo-${Date.now()}`;
-
-    // Preencher o nome do repositório
-    await page.type("repository-name-input", repoName);
-
-    // Selecionar o repositório como público (opcional)
-    await page.click("input#repository_visibility_public");
-
-    // Criar o repositório
-    await page.click("button.btn-primary");
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
-
-    console.log(`Repositório '${repoName}' criado com sucesso.`);
-
-    // Tela de repositorio criado com sucesso.
-    await page.goto(`https://github.com/GMontanher96/test-repo-${Date.now()}`);
-    await page.screenshot({ path: "screenshots/new-repo.png" });
-
-    // Deslogar
-    await page.click('summary[aria-label="View profile and more"]');
-    await page.waitForSelector(".dropdown-signout");
-    await page.click(".dropdown-signout");
+    await page.waitForSelector('a[href$="/pulls"', { delay: 100 });
+    await page.click("#pull-requests-tab");
     await page.waitForNavigation();
 
+    // Aumentar o tempo de espera para o seletor 'pull-requests-repo-tab-count'
+    await page.waitForSelector(
+      "#pull-requests-repo-tab-count",
+      { delay: 100 },
+      {
+        visible: true,
+        timeout: 60000,
+      }
+    );
+
+    // Navegar para a página de criação de novos repositórios
+    //await page.goto("https://github.com/new", { delay: 100 });
+    //await page.waitForNavigation();
+
+    // Define o nome do repositório
+    //const repositoriesName = 'repositório-teste-puppeteer';
+
+    // Preencher o campo de entrada do nome do repositório usando XPath
+    //const repoNameInputXPath = '//*[@id="repository-name-input"]';
+    //await page.waitForXPath(repoNameInputXPath);
+    //const [repoNameInput] = await page.$x(repoNameInputXPath);
+    //await repoNameInput.type(repositoriesName);
+
+    // Exibe a tela de repositorio criado com sucesso.
+    //await page.goto(`https://github.com/GMontanher96/test-repo-${Date.now()}`);
+    //await page.screenshot({ path: "screenshots/new-repo.png" });
+
+    // Desloga do git com sucesso
+    await page.click(".AppHeader-user"), { delay: 100 };
+    await page.goto("https://github.com/logout", { delay: 100 });
+
+    // Aguardar a navegação após o logout
+    await page.click('input[name="commit"]',  { delay: 100 });
+    await page.waitForNavigation(), { delay: 100 } ;
     // VAlidação para deslogar do git com sucesso.
     if (page.url() !== "https://github.com/") {
       throw new Error("Falha ao deslogar");
