@@ -6,11 +6,13 @@ require("dotenv").config();
   const page = await browser.newPage();
   const EMAIL = process.env.EMAIL;
   const PASSWORD = process.env.PASSWORD;
+  const urlGit = "https://github.com";
+  const urlRepo = "https://github.com/GMontanher96?tab=repositories";
 
   try {
     // Acessando a página inicial do Git.
-    await page.goto(
-      "https://github.com",
+    await page.goto(urlGit
+      ,
       { waitUntil: "networkidle2" },
       { delay: 100 }
     );
@@ -50,7 +52,7 @@ require("dotenv").config();
     // await page.waitForNavigation();
 
     // Acessando a aba "Repositories".
-    await page.goto("https://github.com/GMontanher96?tab=repositories");
+    await page.goto(urlRepo);
     await page.waitForSelector("h3");
 
     // Obter todos os repositórios e selecionar um aleatoriamente
